@@ -23,6 +23,10 @@ export class App extends React.PureComponent<{}, AppState> {
 		});
 	}
 
+	renderLabels = (labels: string[]) => {
+        return (<ul className='labels'>{labels.map((label) => (<li>{label}</li>))}</ul>);
+    }
+
 	renderTickets = (tickets: Ticket[]) => {
 
 		const filteredTickets = tickets
@@ -35,6 +39,7 @@ export class App extends React.PureComponent<{}, AppState> {
 				<p className='content'>{ticket.content.trim()}</p>
 				<footer>
 					<div className='meta-data'>By {ticket.userEmail} | { new Date(ticket.creationTime).toLocaleString()}</div>
+					{ticket.labels ? this.renderLabels(ticket.labels) : null}
 				</footer>
 			</li>))}
 		</ul>);

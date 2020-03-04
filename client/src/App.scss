@@ -107,6 +107,17 @@ body {
 					margin: 10px 0;
 					flex-shrink: 0;
 				}
+
+				.labels li {
+					padding: 5px 15px;
+					margin: 0px 3px;
+					background-color: #DAEFFE;
+					color: #21445E;
+					border: 1px solid #C1E3FE;
+					border-radius: 5px;
+					list-style: none;
+					display: inline-block;
+				}
 			}
 
 			
