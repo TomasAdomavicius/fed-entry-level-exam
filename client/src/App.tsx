@@ -4,7 +4,9 @@ import {createApiClient, Ticket} from './api';
 
 export type AppState = {
 	tickets?: Ticket[],
-	search: string;
+	search: string,
+	pageNumber: number,
+	hasNextPage: boolean;
 }
 
 const api = createApiClient();
@@ -12,14 +14,18 @@ const api = createApiClient();
 export class App extends React.PureComponent<{}, AppState> {
 
 	state: AppState = {
-		search: ''
+		search: '',
+		pageNumber: 1,
+		hasNextPage: true
 	}
 
 	searchDebounce: any = null;
 
 	async componentDidMount() {
+		const response = await api.getTickets({page: this.state.pageNumber})
 		this.setState({
-			tickets: await api.getTickets()
+			tickets: response.paginatedData,
+			hasNextPage: response.hasNextPage
 		});
 	}
 
@@ -56,6 +62,16 @@ export class App extends React.PureComponent<{}, AppState> {
 		}, 300);
 	}
 
+	previousPage = async () => {
+		const response = await api.getTickets({page: this.state.pageNumber - 1});
+		this.setState({pageNumber: this.state.pageNumber - 1, tickets: response.paginatedData, hasNextPage: response.hasNextPage});
+	}
+
+	nextPage = async () => {
+		const response = await api.getTickets({page: this.state.pageNumber + 1});
+		this.setState({pageNumber: this.state.pageNumber + 1, tickets: response.paginatedData, hasNextPage: response.hasNextPage});
+	}
+
 	render() {	
 		const {tickets} = this.state;
 
@@ -66,6 +82,11 @@ export class App extends React.PureComponent<{}, AppState> {
 			</header>
 			{tickets ? <div className='results'>Showing {tickets.length} results</div> : null }	
 			{tickets ? this.renderTickets(tickets) : <h2>Loading..</h2>}
+			
+			<footer className="pagination">
+                {this.state.pageNumber >1 ? <button onClick={this.previousPage}>previous page</button> : null}
+                {this.state.hasNextPage ? <button onClick={this.nextPage}>next page</button> : null}
+            </footer>
 		</main>)
 	}
 }

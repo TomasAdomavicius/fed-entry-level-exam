@@ -9,14 +9,19 @@ export type Ticket = {
 	labels?: string[];
 }
 
+export type Response = {
+	paginatedData: Ticket[],
+	hasNextPage: boolean
+}
+
 export type ApiClient = {
-	getTickets: () => Promise<Ticket[]>;
+	getTickets: (params: any) => Promise<Response>;
 }
 
 export const createApiClient = (): ApiClient => {
 	return {
-		getTickets: () => {
-			return axios.get(`http://localhost:3232/api/tickets`).then((res) => res.data);
+		getTickets: (params) => {
+			return axios.get(`http://localhost:3232/api/tickets`, {params: params}).then((res) => res.data);
 		}
 	}
 }
