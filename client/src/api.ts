@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export type Ticket = {
-	id: string,
+	id: string;
 	title: string;
 	content: string;
 	creationTime: number;

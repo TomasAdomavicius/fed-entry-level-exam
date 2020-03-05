@@ -15,10 +15,15 @@ body {
 		font-weight: 300;
 	}
 
-	.results {
+	.results, .hiden-results {
 		color: #7a92a5;
 		font-size: 12px;
-		margin: 12px 5px;
+		margin: 12px 0px 12px 5px;
+		display: inline-block
+	}
+
+	.hiden-results {
+		font-style: italic;
 	}
 
 	header {
@@ -59,6 +64,14 @@ body {
 		font-size: 12px;
 	}
 
+	button {
+		background: none;
+		border: none;
+		padding: 0;
+		color: #069;
+		cursor: pointer;
+	}
+
 	.tickets {
 
 		margin: 0;
@@ -80,6 +93,15 @@ body {
 
 			&:hover {
 				box-shadow: 0 2px 6px 1px #d3d7da;
+			}
+
+			.hide-btn {
+				text-align: right;
+				visibility: hidden;
+			}
+
+			&:hover button {
+				visibility: visible;
 			}
 
 			.title {
