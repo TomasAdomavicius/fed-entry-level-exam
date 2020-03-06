@@ -100,7 +100,7 @@ body {
 				visibility: hidden;
 			}
 
-			&:hover button {
+			&:hover button.hide-btn {
 				visibility: visible;
 			}
 
@@ -116,6 +116,12 @@ body {
 				color: #577083;
 				word-wrap: break-word;
 				white-space: pre-wrap;
+			}
+
+			.content button {
+				display: block;
+				margin-top: 0.5rem;
+				font-size: 14px;
 			}
 			
 			footer {
