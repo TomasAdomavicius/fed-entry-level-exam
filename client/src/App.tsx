@@ -56,6 +56,13 @@ export class App extends React.PureComponent<{}, AppState> {
 				search: val
 			});
 		}, 300);
+
+		const response = await api.getTickets({page: this.state.pageNumber, search: val});
+
+		this.setState({
+			tickets: response.paginatedData,
+			hasNextPage: response.hasNextPage
+		});
 	}
 
 	onPreviousPage = async () => {
