@@ -33,14 +33,12 @@ body {
 		background-color: #fff;
 		box-shadow: 0 2px 6px 1px #e1e5e8;
 		margin-bottom: 14px;
-		display: flex;
-		flex-direction: column;
 		border: 1px solid #fff;
 		padding: 10px 20px;
 		position: relative;
 
 		input {
-			width: 100%;
+			width: 90%;
 			text-overflow: ellipsis;
 			display: inline-block;
 			color: #20455e;
@@ -71,6 +69,15 @@ body {
 		color: #069;
 		cursor: pointer;
 	}
+
+	p {
+		margin: 0;
+	}
+
+	ul, li {
+		margin: 0;
+		padding: 0;
+	  }
 
 	.tickets {
 
@@ -164,5 +171,43 @@ body {
 		color: #21445E;
 		border: 1px solid #C1E3FE;
 		border-radius: 5px;
+	}
+
+	.dropdown-wrapper {
+		position: relative;
+		display: inline-block;
+		width: 10%;
+		font-size: 12px;
+	}
+	.dropdown-header {
+		border: 1px solid #b6c1cd;
+		border-radius: 4px;
+		color: #b6c1cd;
+		position: relative;
+		background-color: #fff;
+	}
+	
+	.dropdown-list {
+		z-index: 1;
+		width: 100%;
+		position: absolute;
+		border: 1px solid #dfdfdf;
+		border-top: none;
+		background-color: #fff;
+		max-height: 215px;
+		overflow-y: scroll;
+	}
+	.dropdown-list-item, .dropdown-list-item-selected {
+		padding: 8px 10px;
+		display: block;
+		text-overflow: ellipsis;
+	}
+
+	.dropdown-list-item-selected {
+		background-color: #577083;
+	}
+
+	.dropdown-list-item:hover {
+		background-color: #DAEFFE;
 	}
 }

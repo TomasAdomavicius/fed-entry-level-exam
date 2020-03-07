@@ -2,6 +2,12 @@ import React from 'react';
 import './App.scss';
 import {createApiClient, Ticket} from './api';
 import { TicketListItem } from './components/TicketListItem';
+import {Dropdown, Label} from './components/Dropdown'
+
+export type labelObject = {
+	title: string;
+	selected: boolean;
+}
 
 export type AppState = {
 	tickets?: Ticket[];
@@ -9,6 +15,7 @@ export type AppState = {
 	pageNumber: number;
 	hasNextPage: boolean;
 	idsToHide: string[];
+	labels: Label[];
 }
 
 const api = createApiClient();
@@ -19,21 +26,24 @@ export class App extends React.PureComponent<{}, AppState> {
 		search: '',
 		pageNumber: 1,
 		hasNextPage: true,
-		idsToHide: []
+		idsToHide: [],
+		labels: []
 	}
 
 	searchDebounce: any = null;
 
 	async componentDidMount() {
-		const response = await api.getTickets({page: this.state.pageNumber});
+		const tickets = await api.getTickets({page: this.state.pageNumber});
+		const labels = await api.getLabels();
 
 		this.setState({
-			tickets: response.paginatedData,
-			hasNextPage: response.hasNextPage
+			tickets: tickets.paginatedData,
+			hasNextPage: tickets.hasNextPage,
+			labels: labels.map(name => ({ title: name , selected: false}))
 		});
 	}
 
-	handler = (id: string) => {
+	onHide = (id: string) => {
 		this.setState({idsToHide: [...this.state.idsToHide, id]});
 	  };
 
@@ -42,7 +52,7 @@ export class App extends React.PureComponent<{}, AppState> {
 			.filter((t) => (!this.state.idsToHide.includes(t.id)));
 
 		return (<ul className='tickets'>
-			{filteredTickets.map((ticket) => (<TicketListItem  key={ticket.id} ticket={ticket} handler = {this.handler}>
+			{filteredTickets.map((ticket) => (<TicketListItem  key={ticket.id} ticket={ticket} handler = {this.onHide}>
 			</TicketListItem>))}
 		</ul>);
 	}
@@ -79,6 +89,23 @@ export class App extends React.PureComponent<{}, AppState> {
 		this.setState({idsToHide: []});
 	}
 
+	toggleSelected = async (title: string, selected: boolean) => {
+		for (var i in this.state.labels) {
+			if (this.state.labels[i].title === title) {
+			   this.state.labels[i].selected = !selected;
+			   break;
+			}
+		  }
+
+		const response = await api.getTickets({page: this.state.pageNumber, 
+			labels: this.state.labels.filter(l => l.selected).map(l => l.title)});
+
+		this.setState({
+			tickets: response.paginatedData,
+			hasNextPage: response.hasNextPage
+		});
+	  }
+
 	render() {
 		const {tickets} = this.state;
 
@@ -86,6 +113,7 @@ export class App extends React.PureComponent<{}, AppState> {
 			<h1>Tickets List</h1>
 			<header>
 				<input type="search" placeholder="Search..." onChange={(e) => this.onSearch(e.target.value)}/>
+				<Dropdown toggleItem={this.toggleSelected} headerTitle="Select labels" list={this.state.labels}/>
 			</header>
 			{tickets ? <div className='results'>Showing {tickets.length} results</div> : null }
 			{this.state.idsToHide.length === 1 ? <div className='hiden-results'>({this.state.idsToHide.length} hidden ticket - <button onClick={this.onRestore}>restore)</button></div> : null}
