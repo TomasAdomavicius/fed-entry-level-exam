@@ -71,7 +71,8 @@ export class App extends React.PureComponent<{}, AppState> {
 
 		this.setState({
 			tickets: response.paginatedData,
-			hasNextPage: response.hasNextPage
+			hasNextPage: response.hasNextPage,
+			pageNumber: 1
 		});
 	}
 

@@ -18,12 +18,41 @@ app.use((_, res, next) => {
 	next();
 });
 
+function dateFromString(dateString: string) {
+	const dateParts = dateString.split("/");
+	return +new Date(+dateParts[2], +dateParts[1] - 1, +dateParts[0]); 
+  };
+
 app.get('/api/tickets', (req, res) => {
 
-	const search = req.query.search || '';
+	let search = req.query.search || '';
 	const labels = req.query.labels || [];
 
-	let filteredData = tempData
+	const re = /(((after:)|(before:))(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|(([1][26]|[2468][048]|[3579][26])00)))))|(from:\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+)/g;
+	let filteredData = tempData;
+	const match = search.match(re);
+
+	if(match !== null) {
+		match.forEach((f: string) => {
+			let parts = f.split(':');
+			switch(parts[0]) {
+				case 'after':
+					filteredData = filteredData.filter(t => +new Date(t.creationTime) > dateFromString(parts[1]))
+					search=search.split(" ").filter((word: string)=> word!==f).join(' ');
+					
+					break;
+				case 'before':
+					filteredData = filteredData.filter(t => +new Date(t.creationTime) < dateFromString(parts[1]));
+					search=search.split(" ").filter((word: string)=> word!==f).join(' ');
+					break;
+				case 'from':
+					filteredData = filteredData.filter(t => t.userEmail === parts[1]);
+					search=search.split(" ").filter((word: string)=> word!==f).join(' ');
+			  }
+		});
+	}
+
+	filteredData = filteredData
 		.filter((t) => (t.title.toLowerCase() + t.content.toLowerCase()).includes(search.toLowerCase()));
 	
 	if(labels.length > 0) {
