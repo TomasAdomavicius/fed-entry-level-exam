@@ -76,14 +76,13 @@ export class App extends React.PureComponent<{}, AppState> {
 		});
 	}
 
-	onPreviousPage = async () => {
-		const response = await api.getTickets({page: this.state.pageNumber - 1});
-		this.setState({pageNumber: this.state.pageNumber - 1, tickets: response.paginatedData, hasNextPage: response.hasNextPage});
-	}
-
-	onNextPage = async () => {
+	onMoreTickets = async () => {
 		const response = await api.getTickets({page: this.state.pageNumber + 1});
-		this.setState({pageNumber: this.state.pageNumber + 1, tickets: response.paginatedData, hasNextPage: response.hasNextPage});
+		const oldTickets = this.state.tickets || [];
+		this.setState({
+			pageNumber: this.state.pageNumber + 1, 
+			tickets: [...oldTickets, ...response.paginatedData],
+			hasNextPage: response.hasNextPage});
 	}
 
 	onRestore = () => {
@@ -98,8 +97,7 @@ export class App extends React.PureComponent<{}, AppState> {
 			}
 		  }
 
-		const response = await api.getTickets({page: this.state.pageNumber, 
-			labels: this.state.labels.filter(l => l.selected).map(l => l.title)});
+		const response = await api.getTickets({labels: this.state.labels.filter(l => l.selected).map(l => l.title)});
 
 		this.setState({
 			tickets: response.paginatedData,
@@ -120,10 +118,8 @@ export class App extends React.PureComponent<{}, AppState> {
 			{this.state.idsToHide.length === 1 ? <div className='hiden-results'>({this.state.idsToHide.length} hidden ticket - <button onClick={this.onRestore}>restore)</button></div> : null}
 			{this.state.idsToHide.length > 1 ? <div className='hiden-results'>({this.state.idsToHide.length} hidden tickets - <button onClick={this.onRestore}>restore)</button></div> : null}
 			{tickets ? this.renderTickets(tickets) : <h2>Loading..</h2>}
-			
-			<footer className="pagination">
-                {this.state.pageNumber >1 ? <button onClick={this.onPreviousPage}>previous page</button> : null}
-                {this.state.hasNextPage ? <button onClick={this.onNextPage}>next page</button> : null}
+			<footer>
+                {this.state.hasNextPage ? <button className='more-tickets' onClick={this.onMoreTickets}>More tickets</button> : null}
             </footer>
 		</main>)
 	}
