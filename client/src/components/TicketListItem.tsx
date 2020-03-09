@@ -48,7 +48,7 @@ export class TicketListItem extends React.Component<TicketListItemProps, TicketL
     return (
       <ul className="labels">
         {labels.map(label => (
-          <li>{label}</li>
+          <li key={label}>{label}</li>
         ))}
       </ul>
     );

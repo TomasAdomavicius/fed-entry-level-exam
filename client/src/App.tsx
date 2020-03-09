@@ -52,7 +52,7 @@ export class App extends React.PureComponent<{}, AppState> {
 			.filter((t) => (!this.state.idsToHide.includes(t.id)));
 
 		return (<ul className='tickets'>
-			{filteredTickets.map((ticket) => (<TicketListItem  key={ticket.id} ticket={ticket} handler = {this.onHide}>
+			{filteredTickets.map((ticket) => (<TicketListItem key={ticket.id} ticket={ticket} handler = {this.onHide}>
 			</TicketListItem>))}
 		</ul>);
 	}
@@ -115,8 +115,7 @@ export class App extends React.PureComponent<{}, AppState> {
 				<Dropdown toggleItem={this.toggleSelected} headerTitle="Select labels" list={this.state.labels}/>
 			</header>
 			{tickets ? <div className='results'>Showing {tickets.length} results</div> : null }
-			{this.state.idsToHide.length === 1 ? <div className='hiden-results'>({this.state.idsToHide.length} hidden ticket - <button onClick={this.onRestore}>restore)</button></div> : null}
-			{this.state.idsToHide.length > 1 ? <div className='hiden-results'>({this.state.idsToHide.length} hidden tickets - <button onClick={this.onRestore}>restore)</button></div> : null}
+			{this.state.idsToHide.length > 0 ? <div className='hidden-results'>({this.state.idsToHide.length} {this.state.idsToHide.length === 1 ? 'hidden ticket' : 'hidden tickets'} - <button onClick={this.onRestore}>restore</button>)</div> : null}
 			{tickets ? this.renderTickets(tickets) : <h2>Loading..</h2>}
 			<footer>
                 {this.state.hasNextPage ? <button className='more-tickets' onClick={this.onMoreTickets}>More tickets</button> : null}

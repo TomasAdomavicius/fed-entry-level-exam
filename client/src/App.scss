@@ -15,14 +15,14 @@ body {
 		font-weight: 300;
 	}
 
-	.results, .hiden-results {
+	.results, .hidden-results {
 		color: #7a92a5;
 		font-size: 12px;
 		margin: 12px 0px 12px 5px;
 		display: inline-block
 	}
 
-	.hiden-results {
+	.hidden-results, .hidden-results button {
 		font-style: italic;
 	}
 
@@ -83,6 +83,7 @@ body {
 
 		margin: 0;
 		padding: 0;
+		display: inline-block;
 
 		.ticket {
 			width: 100%;
@@ -105,10 +106,13 @@ body {
 			.hide-btn {
 				text-align: right;
 				visibility: hidden;
+				width: auto;
+				display: inline-block; 
 			}
 
 			&:hover button.hide-btn {
 				visibility: visible;
+				width: auto;
 			}
 
 			.title {
@@ -166,6 +170,10 @@ body {
 	.more-tickets {
 		font-size: 20px;
 		color: #21445E;
+	}
+
+	.more-tickets:hover {
+		text-decoration: underline;
 	}
 
 	.dropdown-wrapper {
